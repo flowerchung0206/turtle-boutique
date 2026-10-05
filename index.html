@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<title>頑龜爬蟲 STReptile</title>
+<meta property="og:title" content="頑龜爬蟲 STReptile">
+<meta property="og:description" content="鑽紋龜與各式爬寵館藏展示">
+<meta property="og:image" content="logo.png">
+<style>
+:root{
+  --bg:#141211;
+  --bg-soft:#1d1a16;
+  --panel:#1a1816;
+  --ink:#F4EEDF;
+  --ink-soft:#AFA790;
+  --gold:#E8B923;
+  --gold-light:#F7D154;
+  --gold-deep:#B9870F;
+  --line: rgba(244,238,223,.14);
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.display{font-family:'Bungee','Noto Sans TC',cursive}
+h1,h2{text-wrap:balance}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+nav{position:sticky;top:0;z-index:20;background:rgba(20,18,17,.88);backdrop-filter:blur(10px);border-bottom:2px solid var(--gold)}
+.navrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 24px;max-width:1180px;margin:0 auto}
+.brandwrap{display:flex;align-items:center;gap:12px;cursor:pointer;background:none;border:none;padding:0}
+.brandwrap img{width:42px;height:42px;border-radius:50%;border:2px solid var(--gold);display:block}
+.brandname{display:flex;flex-direction:column;line-height:1.15;text-align:left}
+.brandname .zh{font-size:16px;font-weight:900;letter-spacing:.02em;color:var(--ink)}
+.brandname .en{font-family:'Bungee',cursive;font-size:11px;color:var(--gold);letter-spacing:.06em}
+.navicons{display:flex;gap:18px;font-size:13px;font-weight:500;color:var(--ink-soft)}
+.navicons span{display:flex;align-items:center;gap:5px}
+
+.hero{position:relative;padding:88px 24px 70px;max-width:1180px;margin:0 auto 0;animation:rise .8s ease both}
+.hero p.kicker{display:inline-block;color:var(--gold);background:transparent;border:1px solid var(--gold);font-size:12.5px;font-weight:700;letter-spacing:.14em;margin:0 0 24px;padding:7px 18px;border-radius:999px}
+.hero h1{font-size:clamp(34px,7vw,64px);line-height:1.22;font-weight:900;margin:0 0 24px;max-width:15ch}
+.hero h1 .pop{color:var(--gold)}
+.hero .sub{color:var(--ink-soft);font-size:16px;line-height:1.8;max-width:46ch;margin:0 0 30px}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#171310;text-decoration:none;font-weight:700;font-size:15px;padding:13px 28px;border-radius:999px;cursor:pointer;border:none;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 4px 16px rgba(232,185,35,.25)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(232,185,35,.35)}
+.btn-gold:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.intro{padding:64px 24px;border-top:2px dashed var(--line);border-bottom:2px dashed var(--line);background:var(--bg-soft)}
+.intro-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1.3fr;gap:50px;align-items:start}
+.intro h2{font-size:26px;font-weight:900;margin:0 0 10px;color:var(--ink);max-width:10ch;line-height:1.4;letter-spacing:.01em;position:relative;padding-bottom:14px}
+.intro h2::after{content:'';position:absolute;left:0;bottom:0;width:36px;height:3px;background:var(--gold);border-radius:2px}
+.intro .body{color:var(--ink-soft);font-size:15.5px;line-height:1.9;max-width:52ch;min-width:0}
+@media (max-width:760px){.intro-grid{grid-template-columns:1fr;gap:18px}}
+
+.section{padding:70px 24px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;max-width:1180px;margin:0 auto 28px;gap:20px}
+.section-head h2{font-size:26px;font-weight:900;margin:0}
+.section-head .count{color:var(--gold);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+
+.chips{display:flex;gap:9px;overflow-x:auto;max-width:1180px;margin:0 auto 36px;padding:2px 24px 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;border:2px solid var(--line);color:var(--ink-soft);background:transparent;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.01em;cursor:pointer;white-space:nowrap;transition:border-color .2s, color .2s, background .2s}
+.chip:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.chip.active{border-color:var(--gold);color:#171310;background:var(--gold)}
+
+.grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.piece{position:relative;aspect-ratio:3/4;overflow:hidden;cursor:pointer;border-radius:14px;border:2px solid var(--line);transition:border-color .2s, transform .2s;min-width:0}
+.piece:hover{border-color:var(--gold);transform:translateY(-3px)}
+.piece .ph{position:absolute;inset:0;background:
+  radial-gradient(120% 100% at 85% 10%, color-mix(in srgb, var(--gold) 35%, transparent), transparent 55%),
+  linear-gradient(160deg, var(--bg-soft), #0d0c0b 180%)}
+.piece .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 18px;background:linear-gradient(to top, rgba(0,0,0,.6), transparent)}
+.piece .code{color:var(--gold-light);font-family:'Bungee',cursive;font-size:10.5px;letter-spacing:.08em;opacity:.9}
+.piece .name{color:#fff;font-weight:900;font-size:18px;margin-top:5px}
+.piece .price{color:var(--gold-light);font-weight:700;font-size:13px;margin-top:6px;font-variant-numeric:tabular-nums}
+.piece .updated{color:#C9BFA8;font-size:10.5px;margin-top:7px;letter-spacing:.02em;opacity:.8}
+.piece[data-hidden="true"]{display:none}
+@media (max-width:860px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.piece .name{font-size:15px}}
+
+.story{padding:86px 24px;border-top:2px dashed var(--line);text-align:center}
+.story-inner{max-width:720px;margin:0 auto}
+.story blockquote{font-weight:900;font-size:clamp(21px,3.2vw,30px);line-height:1.6;margin:0 0 24px}
+.story blockquote .pop{color:var(--gold)}
+.story .by{color:var(--ink-soft);font-size:13.5px}
+
+.browseall{padding:60px 24px;text-align:center}
+
+footer{padding:60px 24px 44px;border-top:2px solid var(--gold);background:var(--bg-soft)}
+.foot-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:12px}
+.foot-brand img{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold)}
+.foot-mark{font-weight:900;font-size:18px}
+.foot-en{font-family:'Bungee',cursive;font-size:11px;color:var(--gold)}
+.foot-sub{color:var(--ink-soft);font-size:13.5px;margin-top:10px;max-width:34ch;line-height:1.7}
+.line-btn{display:inline-flex;align-items:center;gap:10px;background:#06C755;color:#fff;text-decoration:none;font-weight:700;padding:13px 24px;border-radius:999px;font-size:14px}
+.line-btn:hover{filter:brightness(1.08)}
+.fine{color:var(--ink-soft);font-size:11.5px;margin-top:40px;text-align:center;opacity:.75}
+
+.splash{position:fixed;inset:0;z-index:100;background:#0e0d0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;animation:splash-out .7s ease 1.4s forwards}
+.splash img{width:116px;height:116px;border-radius:50%;opacity:0;transform:scale(.6) rotate(-8deg);animation:logo-in .7s cubic-bezier(.34,1.56,.64,1) .1s forwards}
+.splash .mk{font-family:'Bungee',cursive;font-size:7vw;color:var(--gold);letter-spacing:.06em;opacity:0;animation:splash-in .7s ease .35s forwards;text-align:center;padding:0 20px}
+@media (min-width:640px){.splash .mk{font-size:30px}}
+@keyframes logo-in{to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes splash-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes splash-out{to{opacity:0;visibility:hidden;pointer-events:none}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.hamburger{display:flex;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:2px;border-radius:1px;background:var(--gold)}
+.hamburger:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .35s ease;z-index:30}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(340px,86vw);background:var(--panel);z-index:31;
+  transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+  padding:26px 32px 50px;display:flex;flex-direction:column;overflow-y:auto;border-left:2px solid var(--gold)}
+.drawer.open{transform:translateX(0)}
+.drawer .close{align-self:flex-end;background:none;border:none;font-size:20px;color:var(--gold);cursor:pointer;margin-bottom:30px}
+.drawer a{color:var(--ink);text-decoration:none;font-weight:900;font-size:21px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.drawer a:hover, .drawer a:focus-visible{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="splash" aria-hidden="true">
+  <img src="logo.png" alt="">
+  <div class="mk">頑龜爬蟲 STReptile</div>
+</div>
+
+<nav>
+  <div class="navrow">
+    <button class="hamburger" id="menuBtn" aria-label="開啟選單"><span></span><span></span><span></span></button>
+    <button class="brandwrap" id="brandMark" aria-label="回首頁">
+      <img src="logo.png" alt="頑龜爬蟲 STReptile">
+      <span class="brandname">
+        <span class="zh">頑龜爬蟲</span>
+        <span class="en">STReptile</span>
+      </span>
+    </button>
+    <div class="navicons"><span>♡ 收藏</span><span>🛍 0</span></div>
+  </div>
+</nav>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <button class="close" id="closeDrawer" aria-label="關閉選單">✕</button>
+  <a class="go-collection" data-cat="全部分類" tabindex="0">全部館藏</a>
+  <a class="go-home" data-anchor="story" tabindex="0">品牌故事</a>
+  <a class="go-home" data-anchor="contact" tabindex="0">聯繫我們</a>
+  <a tabindex="0">我的收藏</a>
+  <a tabindex="0">購物袋</a>
+</div>
+
+<main id="homeView">
+  <section class="hero">
+    <p class="kicker">2026 新品系列</p>
+    <h1>用心挑一隻，<br>養出一份<span class="pop">默契</span>。</h1>
+    <p class="sub">頑龜爬蟲 STReptile，專營鑽紋龜與各式爬寵。每一隻的來源、花紋與狀態都清楚記錄，陪你找到真正對眼的那一隻。</p>
+    <button class="btn-gold go-collection" data-cat="全部分類">逛逛館藏 →</button>
+  </section>
+
+  <section class="intro">
+    <div class="intro-grid">
+      <div><h2>關於花紋</h2></div>
+      <div class="body">從小花到鑽圖、從華麗到地圖，命名源自每一隻甲殼上獨有的紋理。我們記錄來源、個性與飼養狀態，挑選前歡迎詳細詢問，交到你手上後也持續提供照護建議。</div>
+    </div>
+  </section>
+
+  <section class="story" id="story">
+    <div class="story-inner">
+      <blockquote>「玩，可以隨興；<span class="pop">顧</span>，我們很講究。」</blockquote>
+      <p class="by">— 頑龜爬蟲 STReptile</p>
+    </div>
+  </section>
+
+  <div class="browseall">
+    <button class="btn-gold go-collection" data-cat="全部分類">瀏覽全部館藏 →</button>
+  </div>
+</main>
+
+<main id="collectionView" hidden>
+  <section class="section">
+    <div class="section-head">
+      <h2>館藏系列</h2>
+      <span class="count" id="count">12 件個體</span>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <img src="logo.png" alt="頑龜爬蟲 STReptile">
+      <div>
+        <div class="foot-mark">頑龜爬蟲</div>
+        <div class="foot-en display">STReptile</div>
+        <p class="foot-sub">鑽紋龜與各式爬寵。對哪隻有興趣，直接加 LINE 問就對了。</p>
+      </div>
+    </div>
+    <a class="line-btn" href="#">加 LINE 聊聊</a>
+  </div>
+  <p class="fine">© 2026 頑龜爬蟲 STReptile。頁面展示內容為實際個體，實際狀態以現場為準。</p>
+</footer>
+
+<script>
+const CATS = ['全部分類','小花','中花','大花','精品大花','豹子','偽豹','華麗','鑽圖A','鑽圖B','鑽圖C','地圖'];
+const PIECES = [
+  {code:'K001',name:'豹子',cat:'豹子',price:'$28,000',updated:'2026.09.28'},
+  {code:'K002',name:'鑽圖 A',cat:'鑽圖A',price:'$8,000',updated:'2026.09.30'},
+  {code:'K003',name:'華麗',cat:'華麗',price:'$15,800',updated:'2026.09.21'},
+  {code:'K004',name:'精品大花',cat:'精品大花',price:'$9,800',updated:'2026.10.01'},
+  {code:'K005',name:'地圖',cat:'地圖',price:'$12,000',updated:'2026.09.26'},
+  {code:'K006',name:'偽豹',cat:'偽豹',price:'$9,800',updated:'2026.09.19'},
+  {code:'K007',name:'大花',cat:'大花',price:'$8,000',updated:'2026.09.30'},
+  {code:'K008',name:'鑽圖 C',cat:'鑽圖C',price:'$3,000',updated:'2026.09.15'},
+  {code:'K009',name:'中花',cat:'中花',price:'$3,000',updated:'2026.09.24'},
+  {code:'K010',name:'小花',cat:'小花',price:'$2,500',updated:'2026.09.12'},
+  {code:'K011',name:'鑽圖 B',cat:'鑽圖B',price:'$6,500',updated:'2026.10.01'},
+  {code:'K012',name:'華麗',cat:'華麗',price:'$9,800',updated:'2026.09.22'}
+];
+
+document.getElementById('chips').innerHTML = CATS.map((c,i)=>
+  `<button class="chip ${i===0?'active':''}" data-cat="${c}">${c}</button>`
+).join('');
+
+document.getElementById('grid').innerHTML = PIECES.map(p=>
+  `<div class="piece" data-cat="${p.cat}">
+    <div class="ph"></div>
+    <div class="cap">
+      <div class="code">${p.code}</div>
+      <div class="name">${p.name}</div>
+      <div class="price">${p.price}</div>
+      <div class="updated">更新於 ${p.updated}</div>
+    </div>
+  </div>`
+).join('');
+
+function filterGrid(cat){
+  let shown = 0;
+  document.querySelectorAll('.piece').forEach(p=>{
+    const match = cat==='全部分類' || p.dataset.cat===cat;
+    p.dataset.hidden = match ? 'false' : 'true';
+    if(match) shown++;
+  });
+  document.getElementById('count').textContent = shown + ' 件個體';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.dataset.cat===cat));
+}
+
+const homeView = document.getElementById('homeView');
+const collectionView = document.getElementById('collectionView');
+
+function showCollection(cat){
+  homeView.hidden = true;
+  collectionView.hidden = false;
+  filterGrid(cat);
+  shutDrawer();
+  window.scrollTo(0,0);
+}
+function showHome(anchor){
+  collectionView.hidden = true;
+  homeView.hidden = false;
+  shutDrawer();
+  if(anchor){
+    requestAnimationFrame(()=> document.getElementById(anchor)?.scrollIntoView({behavior:'smooth'}));
+  } else {
+    window.scrollTo(0,0);
+  }
+}
+
+document.querySelectorAll('.go-collection').forEach(el=>
+  el.addEventListener('click', ()=> showCollection(el.dataset.cat))
+);
+document.querySelectorAll('.go-home').forEach(el=>
+  el.addEventListener('click', ()=> showHome(el.dataset.anchor))
+);
+document.getElementById('brandMark').addEventListener('click', ()=> showHome());
+
+document.getElementById('chips').addEventListener('click', e=>{
+  const btn = e.target.closest('.chip');
+  if(!btn) return;
+  filterGrid(btn.dataset.cat);
+});
+
+const menuBtn = document.getElementById('menuBtn');
+const closeDrawerBtn = document.getElementById('closeDrawer');
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('overlay');
+function openDrawer(){ drawer.classList.add('open'); overlay.classList.add('open'); }
+function shutDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('open'); }
+menuBtn.addEventListener('click', openDrawer);
+closeDrawerBtn.addEventListener('click', shutDrawer);
+overlay.addEventListener('click', shutDrawer);
+</script>
+</body>
+</html>
