@@ -630,7 +630,7 @@ footer{
 const SUPABASE_URL='https://ddhtaubxqklwydgokhju.supabase.co';
 const SUPABASE_KEY='sb_publishable_PGL7DIYRNiycFaWlv2zk9A_ZU4Dcz_X';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let CATS=['全部分類'];
+let CATS=['全部分類','新手入門款','卡羅萊納鑽紋','華麗鑽紋','德州鑽紋','金光閃閃','大麥町系列','青花瓷系列','老闆珍藏'];
 let PIECES=[];
 let detailCode='';
 
@@ -663,7 +663,7 @@ document.getElementById('grid').addEventListener('click',e=>{if(e.target.closest
 document.getElementById('grid').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;if(e.target.closest('.add-cart'))return;const card=e.target.closest('.piece');if(card){e.preventDefault();openDetail(card.dataset.code)}});
 document.getElementById('detailClose').addEventListener('click',closeDetail);document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});document.getElementById('detailAdd').addEventListener('click',()=>{if(detailCode)addToCart(detailCode)});
 async function loadSite(){const {data}=await sb.from('st_site_settings').select('*').eq('key','homepage').maybeSingle();if(data){document.getElementById('homeEyebrow').textContent=data.eyebrow||'';document.getElementById('homeTitle').textContent=data.title||'';document.getElementById('homeSubtitle').textContent=data.subtitle||'';document.getElementById('homeCta').textContent=(data.cta||'探索館藏')+' →';if(data.cover_url){const cover=document.querySelector('.hero-cover');if(cover)cover.style.backgroundImage=`linear-gradient(rgba(28,36,30,.16),rgba(28,36,30,.16)),url("${data.cover_url}")`;}}}
-async function loadTurtles(){const {data,error}=await sb.from('st_public_turtles').select('*').in('status',['在架','預定中']).order('updated_at',{ascending:false});if(error){console.warn(error);return}const ids=(data||[]).map(x=>x.id);let media=[];if(ids.length){const r=await sb.from('st_turtle_media').select('turtle_id,media_type,public_url,sort_order').in('turtle_id',ids).order('sort_order');media=r.data||[]}PIECES=(data||[]).map(x=>{const m=media.filter(a=>a.turtle_id===x.id);return {...x,cat:x.category||'',updated:x.updated_at,price:x.price,main_photo_url:x.main_photo_url||m.find(a=>a.media_type==='main')?.public_url||null,gallery_urls:m.filter(a=>a.media_type==='gallery').map(a=>a.public_url)}});CATS=['全部分類',...Array.from(new Set(PIECES.map(x=>x.cat).filter(Boolean)))];renderChips();renderGrid()}
+async function loadTurtles(){const {data,error}=await sb.from('st_public_turtles').select('*').in('status',['在架','預定中']).order('updated_at',{ascending:false});if(error){console.warn(error);return}const ids=(data||[]).map(x=>x.id);let media=[];if(ids.length){const r=await sb.from('st_turtle_media').select('turtle_id,media_type,public_url,sort_order').in('turtle_id',ids).order('sort_order');media=r.data||[]}PIECES=(data||[]).map(x=>{const m=media.filter(a=>a.turtle_id===x.id);return {...x,cat:x.category||'',updated:x.updated_at,price:x.price,main_photo_url:x.main_photo_url||m.find(a=>a.media_type==='main')?.public_url||null,gallery_urls:m.filter(a=>a.media_type==='gallery').map(a=>a.public_url)}});const fixedCats=['全部分類','新手入門款','卡羅萊納鑽紋','華麗鑽紋','德州鑽紋','金光閃閃','大麥町系列','青花瓷系列','老闆珍藏']; CATS=fixedCats; renderChips(); renderGrid()}
 (async()=>{await loadSite();await loadTurtles();filterGrid('全部分類')})();
 
 // 購物車：先以瀏覽器 localStorage 保存，之後可再接 Supabase 訂單。
