@@ -346,26 +346,6 @@ nav{
 @media (max-width:860px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:480px){.piece .name{font-size:16px}}
 
-
-/* individual media / privacy presentation */
-.piece .ph{overflow:hidden;background:#d9d0c0}
-.piece .piece-image{width:100%;height:100%;object-fit:cover;display:block;filter:blur(18px);transform:scale(1.08);opacity:.9;transition:filter .35s ease,transform .35s ease}
-.piece:hover .piece-image{filter:blur(15px);transform:scale(1.1)}
-.detail-media{display:grid;grid-template-columns:1.45fr .7fr;gap:12px;margin:0 0 22px}
-.detail-main-media{aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:var(--panel-deep);position:relative}
-.detail-main-media img{width:100%;height:100%;object-fit:cover;filter:blur(20px);transform:scale(1.08)}
-.detail-main-media .blur-note{position:absolute;inset:auto 14px 14px;display:inline-flex;justify-content:center;padding:9px 12px;border-radius:999px;background:rgba(38,59,45,.72);color:#f8f4eb;font-size:11px;backdrop-filter:blur(8px)}
-.detail-gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:100%;overflow:auto}
-.detail-gallery button{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel-deep);padding:0;aspect-ratio:1;cursor:pointer}
-.detail-gallery img{width:100%;height:100%;object-fit:cover;filter:blur(11px);transform:scale(1.08)}
-.detail-view-count{display:flex;gap:14px;align-items:center;color:var(--earth);font-size:11px;margin:0 0 16px}
-.detail-view-count b{color:var(--forest)}
-.empty-collection{max-width:720px;margin:0 auto;padding:80px 24px;text-align:center;border-top:1px solid var(--line);background:rgba(247,243,234,.42)}
-.empty-collection .empty-mark{font:500 44px Georgia,serif;color:var(--gold);opacity:.65;margin-bottom:12px}
-.empty-collection h3{font:500 25px Georgia,'Times New Roman','Noto Serif TC',serif;color:var(--forest);margin:0 0 10px}
-.empty-collection p{color:var(--ink-soft);font-size:13px;line-height:1.9;margin:0}
-@media(max-width:760px){.detail-media{grid-template-columns:1fr}.detail-gallery{grid-template-columns:repeat(4,1fr);max-height:none}}
-
 .story{
   padding:90px 24px;
   border-top:1px solid var(--line);
@@ -555,7 +535,7 @@ footer{
       <img src="logo.png" alt="頑龜爬蟲 STReptile">
       <span class="brandname"><span class="zh">頑龜爬蟲</span><span class="en">STReptile</span></span>
     </button>
-    <div class="navicons"><span class="live-mini"><i class="dot"></i>現在 <b id="liveViewerNav">1</b> 人在線</span><button class="cart-mini" id="cartBtn" aria-label="開啟購物車">購物車 <b id="cartCount">0</b></button></div>
+    <div class="navicons"><span class="live-mini"><i class="dot"></i>現在 <b id="liveViewerNav">0</b> 人在線</span><button class="cart-mini" id="cartBtn" aria-label="開啟購物車">購物車 <b id="cartCount">0</b></button></div>
     <div class="top-menu" aria-label="網站選單">
       <a class="go-home" data-anchor="">首頁</a>
       <a class="go-collection" data-cat="全部分類">全部館藏</a>
@@ -578,8 +558,6 @@ footer{
     <div class="detail-kicker">STREPTILE / INDIVIDUAL</div>
     <h2 class="detail-title" id="detailTitle"></h2>
     <div class="detail-code" id="detailCode"></div>
-    <div class="detail-media"><div class="detail-main-media" id="detailMainMedia"><span class="blur-note">照片已霧化｜實際照片請洽詢</span></div><div class="detail-gallery" id="detailGallery"></div></div>
-    <div class="detail-view-count">👁 累計瀏覽 <b id="detailViews">0</b> 人　<span>目前觀看 <b id="detailLiveViews">0</b> 人</span></div>
     <div class="detail-info">
       <div><span class="detail-label">系列</span><span class="detail-value" id="detailCat"></span></div>
       <div><span class="detail-label">價格</span><span class="detail-value" id="detailPrice"></span></div>
@@ -594,7 +572,7 @@ footer{
   <div class="hero-cover">
     <section class="hero">
       <p class="kicker">2026 新品系列</p>
-      <div class="live-badge"><i class="dot"></i>現在有 <b id="liveViewerCount">1</b> 人正在瀏覽館藏</div>
+      <div class="live-badge"><i class="dot"></i>現在有 <b id="liveViewerCount">0</b> 人正在瀏覽館藏</div>
       <h1>用心挑一隻，<br>養出一份<span class="pop">默契</span>。</h1>
       <p class="sub">頑龜爬蟲 STReptile，專營鑽紋龜與各式爬寵。每一隻的來源、花紋與狀態都清楚記錄，陪你找到真正對眼的那一隻。</p>
       <button class="btn-gold go-collection" data-cat="全部分類">逛逛館藏 →</button>
@@ -624,7 +602,7 @@ footer{
   <section class="section">
     <div class="section-head">
       <h2>館藏系列</h2>
-      <span class="count" id="count">0 件個體</span>
+      <span class="count" id="count">12 件個體</span>
     </div>
     <div class="chips" id="chips"></div>
     <div class="grid" id="grid"></div>
@@ -647,36 +625,25 @@ footer{
 </footer>
 
 <script>
-const CATS = ['全部分類','新手入門款','卡羅萊納鑽紋','華麗鑽紋','德州鑽紋','✨金光閃閃','大麥町系列','青花瓷系列','老闆珍藏'];
+const CATS = ['全部分類','新手入門款','卡羅萊納鑽紋','華麗鑽紋','德州鑽紋','金光閃閃','大麥町系列','青花瓷系列','老闆珍藏'];
 const PIECES = [];
 
 document.getElementById('chips').innerHTML = CATS.map((c,i)=>
   `<button class="chip ${i===0?'active':''}" data-cat="${c}">${c}</button>`
 ).join('');
 
-function imageList(p){
-  const raw = p?.gallery || p?.gallery_urls || p?.photos || p?.photo_urls || [];
-  if(Array.isArray(raw)) return raw.filter(Boolean);
-  if(typeof raw==='string') return raw.split(/[,\n]/).map(s=>s.trim()).filter(Boolean);
-  return [];
-}
-function mainImage(p){ return p?.main_image_url || p?.cover_image_url || p?.image_url || imageList(p)[0] || ''; }
-function renderGrid(){
-  const grid=document.getElementById('grid');
-  if(!PIECES.length){
-    grid.innerHTML=`<div class="empty-collection" style="grid-column:1/-1"><div class="empty-mark">龜</div><h3>目前尚無上架個體</h3><p>新的個體正在準備中。<br>每一隻個體的照片與資料，會由後台新增後顯示於此。</p></div>`;
-    return;
-  }
-  grid.innerHTML = PIECES.map(p=>{
-    const img=mainImage(p);
-    return `<div class="piece" data-cat="${p.cat||p.category_name||''}" data-code="${p.code}" tabindex="0" role="button" aria-label="查看 ${p.name} ${p.code} 詳細資訊">
-      <div class="ph">${img?`<img class="piece-image" src="${img}" alt="" loading="lazy">`:''}</div>
-      <div class="cap"><div class="code">${p.code}</div><div class="name">${p.name}</div><div class="price">${p.price||''}</div><div class="updated">更新於 ${p.updated||p.updated_at?.slice(0,10)||''}</div></div>
-      <button class="add-cart" data-code="${p.code}" aria-label="將 ${p.name} 加入購物車">＋ 加入購物車</button>
-    </div>`;
-  }).join('');
-}
-renderGrid();
+document.getElementById('grid').innerHTML = PIECES.map(p=>
+  `<div class="piece" data-cat="${p.cat}" data-code="${p.code}" tabindex="0" role="button" aria-label="查看 ${p.name} ${p.code} 詳細資訊">
+    <div class="ph"></div>
+    <div class="cap">
+      <div class="code">${p.code}</div>
+      <div class="name">${p.name}</div>
+      <div class="price">${p.price}</div>
+      <div class="updated">更新於 ${p.updated}</div>
+    </div>
+    <button class="add-cart" data-code="${p.code}" aria-label="將 ${p.name} 加入購物車">＋ 加入購物車</button>
+  </div>`
+).join('');
 
 function filterGrid(cat){
   let shown = 0;
@@ -730,25 +697,15 @@ let detailCode='';
 function openDetail(code){
   const p=PIECES.find(x=>x.code===code); if(!p)return;
   detailCode=code;
-  document.getElementById('detailTitle').textContent=p.name||'';
-  document.getElementById('detailCode').textContent=p.code||'';
-  document.getElementById('detailCat').textContent=p.cat||p.category_name||'';
-  document.getElementById('detailPrice').textContent=p.price||'';
-  document.getElementById('detailUpdated').textContent=p.updated||p.updated_at?.slice(0,10)||'';
-  const main=mainImage(p);
-  const mainBox=document.getElementById('detailMainMedia');
-  mainBox.innerHTML=main?`<img src="${main}" alt=""><span class="blur-note">照片已霧化｜實際照片請洽詢</span>`:`<span class="blur-note" style="inset:auto 50% 50%;transform:translate(50%,50%);white-space:nowrap">尚未上傳照片</span>`;
-  const gallery=document.getElementById('detailGallery');
-  const imgs=imageList(p);
-  gallery.innerHTML=imgs.map(u=>`<button type="button"><img src="${u}" alt=""></button>`).join('');
-  document.getElementById('detailViews').textContent=Number(p.view_count||p.views||0).toLocaleString('zh-TW');
-  document.getElementById('detailLiveViews').textContent=Number(p.live_viewers||0);
+  document.getElementById('detailTitle').textContent=p.name;
+  document.getElementById('detailCode').textContent=p.code;
+  document.getElementById('detailCat').textContent=p.cat;
+  document.getElementById('detailPrice').textContent=p.price;
+  document.getElementById('detailUpdated').textContent=p.updated;
   document.getElementById('detailModal').classList.add('open');
   document.getElementById('detailModal').setAttribute('aria-hidden','false');
-  // 每隻個體的即時觀看頻道預留：真正累計瀏覽需由 Supabase 瀏覽紀錄表寫入。
-  startPiecePresence(p);
 }
-function closeDetail(){stopPiecePresence();document.getElementById('detailModal').classList.remove('open');document.getElementById('detailModal').setAttribute('aria-hidden','true');}
+function closeDetail(){document.getElementById('detailModal').classList.remove('open');document.getElementById('detailModal').setAttribute('aria-hidden','true');}
 document.getElementById('grid').addEventListener('click',e=>{
   if(e.target.closest('.add-cart'))return;
   const card=e.target.closest('.piece'); if(card)openDetail(card.dataset.code);
@@ -761,25 +718,6 @@ document.getElementById('grid').addEventListener('keydown',e=>{
 document.getElementById('detailClose').addEventListener('click',closeDetail);
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});
 document.getElementById('detailAdd').addEventListener('click',()=>{if(detailCode)addToCart(detailCode)});
-
-let pieceLiveChannel=null;
-function stopPiecePresence(){ if(pieceLiveChannel){ try{pieceLiveChannel.unsubscribe();}catch(e){} pieceLiveChannel=null; } }
-function startPiecePresence(p){
-  stopPiecePresence();
-  if(!window.supabase?.createClient || !p?.code) return;
-  try{
-    const client=window.supabase.createClient(LIVE_SUPABASE_URL,LIVE_SUPABASE_KEY);
-    const key='st-piece-'+p.code+'-'+(sessionStorage.getItem('st_reptile_visitor_id')||crypto.randomUUID());
-    pieceLiveChannel=client.channel('st-reptile-piece-'+p.code,{config:{presence:{key}}});
-    const sync=()=>{
-      const state=pieceLiveChannel?.presenceState?.()||{}; const ids=new Set();
-      Object.values(state).forEach(list=>(list||[]).forEach(x=>x?.visitor_id&&ids.add(x.visitor_id)));
-      document.getElementById('detailLiveViews').textContent=ids.size;
-    };
-    pieceLiveChannel.on('presence',{event:'sync'},sync).on('presence',{event:'join'},sync).on('presence',{event:'leave'},sync);
-    pieceLiveChannel.subscribe(async status=>{if(status==='SUBSCRIBED'){await pieceLiveChannel.track({visitor_id:key,code:p.code,at:new Date().toISOString()});sync();}});
-  }catch(e){console.warn('individual presence unavailable',e)}
-}
 
 // 購物車：先以瀏覽器 localStorage 保存，之後可再接 Supabase 訂單。
 const CART_KEY='st_reptile_cart_v1';
@@ -815,7 +753,7 @@ renderCart();
 const LIVE_SUPABASE_URL='https://ddhtaubxqklwydgokhju.supabase.co';
 const LIVE_SUPABASE_KEY='sb_publishable_PGL7DIYRNiycFaWlv2zk9A_ZU4Dcz_X';
 let liveChannel=null;
-function updateLiveCount(){if(!liveChannel)return;const state=liveChannel.presenceState();const ids=new Set();Object.values(state||{}).forEach(list=>(list||[]).forEach(p=>{if(p?.visitor_id)ids.add(p.visitor_id)}));const count=Math.max(1,ids.size);document.getElementById('liveViewerCount').textContent=count;document.getElementById('liveViewerNav').textContent=count}
+function updateLiveCount(){if(!liveChannel)return;const state=liveChannel.presenceState();const ids=new Set();Object.values(state||{}).forEach(list=>(list||[]).forEach(p=>{if(p?.visitor_id)ids.add(p.visitor_id)}));const count=ids.size;document.getElementById('liveViewerCount').textContent=count;document.getElementById('liveViewerNav').textContent=count}
 async function startLivePresence(){try{if(!window.supabase?.createClient)return;const client=window.supabase.createClient(LIVE_SUPABASE_URL,LIVE_SUPABASE_KEY);const visitorId=sessionStorage.getItem('st_reptile_visitor_id')||crypto.randomUUID();sessionStorage.setItem('st_reptile_visitor_id',visitorId);liveChannel=client.channel('st-reptile-live',{config:{presence:{key:visitorId}}});liveChannel.on('presence',{event:'sync'},updateLiveCount).on('presence',{event:'join'},updateLiveCount).on('presence',{event:'leave'},updateLiveCount);liveChannel.subscribe(async status=>{if(status==='SUBSCRIBED'){await liveChannel.track({visitor_id:visitorId,online_at:new Date().toISOString()});updateLiveCount()}})}catch(err){console.warn('即時觀看人數暫時無法連線',err)}}
 startLivePresence();
 </script>
