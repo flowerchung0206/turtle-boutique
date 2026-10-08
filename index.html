@@ -496,6 +496,31 @@ footer{
 .cart-empty{padding:55px 10px;text-align:center;color:var(--ink-soft);font-size:13px;line-height:1.8}
 .cart-foot{border-top:1px solid var(--line);padding-top:18px}.cart-total{display:flex;justify-content:space-between;color:var(--forest);font-weight:700;margin-bottom:14px}.cart-checkout{width:100%;border:0;border-radius:999px;padding:13px 18px;background:var(--forest);color:#fff;font:700 13px 'Noto Sans TC',sans-serif;cursor:pointer}
 @media (max-width:760px){.piece .add-cart{opacity:1;transform:none;position:absolute;bottom:12px;padding:8px 10px}.piece .cap{padding-bottom:58px}}
+
+/* ===== top navigation + clickable individual detail ===== */
+.navrow{flex-wrap:wrap;gap:12px}
+.top-menu{width:100%;display:flex;align-items:center;justify-content:flex-end;gap:22px;padding:9px 0 4px;border-top:1px solid var(--line);}
+.top-menu a,.top-menu button{appearance:none;border:0;background:none;color:var(--earth);font:500 12px/1.2 'Noto Sans TC',sans-serif;cursor:pointer;padding:7px 0;text-decoration:none;transition:color .2s ease}
+.top-menu a:hover,.top-menu button:hover{color:var(--forest)}
+.top-menu .top-cart{font-weight:700;color:var(--forest)}
+.drawer{display:none!important}
+#menuBtn{display:none!important}
+.overlay{display:none}
+.piece{cursor:pointer}
+.piece:focus{outline:2px solid var(--gold);outline-offset:3px}
+.detail-modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;background:rgba(30,38,32,.42);backdrop-filter:blur(5px)}
+.detail-modal.open{opacity:1;visibility:visible;pointer-events:auto}
+.detail-card{width:min(720px,94vw);max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);box-shadow:0 28px 70px rgba(30,38,32,.2);border-radius:22px;padding:28px;position:relative}
+.detail-close{position:absolute;right:18px;top:18px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--cream);color:var(--earth);cursor:pointer}
+.detail-kicker{font-size:11px;letter-spacing:.16em;color:var(--earth);margin-bottom:8px}
+.detail-title{font:600 30px/1.15 Georgia,'Times New Roman','Noto Serif TC',serif;color:var(--forest);margin:0 45px 8px 0}
+.detail-code{font-size:12px;color:var(--ink-soft);margin-bottom:22px}
+.detail-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 24px}
+.detail-info div{background:var(--panel-soft);padding:15px;border-radius:14px}
+.detail-label{display:block;font-size:10px;color:var(--earth);margin-bottom:5px;letter-spacing:.08em}
+.detail-value{font-weight:700;color:var(--forest)}
+.detail-add{width:100%;border:0;border-radius:999px;padding:14px;background:var(--forest);color:var(--cream);font:700 13px 'Noto Sans TC',sans-serif;cursor:pointer}
+@media(max-width:760px){.top-menu{justify-content:flex-start;gap:16px;overflow:auto;white-space:nowrap;padding-bottom:2px}.top-menu a,.top-menu button{font-size:11px}.detail-info{grid-template-columns:1fr}.detail-card{padding:22px}}
 </style>
 </head>
 <body>
@@ -511,26 +536,37 @@ footer{
       <img src="logo.png" alt="頑龜爬蟲 STReptile">
       <span class="brandname"><span class="zh">頑龜爬蟲</span><span class="en">STReptile</span></span>
     </button>
-    <div class="navicons"><span class="live-mini"><i class="dot"></i>現在 <b id="liveViewerNav">1</b> 人在線</span><button class="cart-mini" id="cartBtn" aria-label="開啟購物車">購物車 <b id="cartCount">0</b></button><button class="option-btn" id="menuBtn" aria-label="開啟選項" aria-expanded="false">選項 <span class="chev">⌄</span></button></div>
+    <div class="navicons"><span class="live-mini"><i class="dot"></i>現在 <b id="liveViewerNav">1</b> 人在線</span><button class="cart-mini" id="cartBtn" aria-label="開啟購物車">購物車 <b id="cartCount">0</b></button></div>
+    <div class="top-menu" aria-label="網站選單">
+      <a class="go-home" data-anchor="">首頁</a>
+      <a class="go-collection" data-cat="全部分類">全部館藏</a>
+      <a class="go-home" data-anchor="story">品牌故事</a>
+      <a class="go-home" data-anchor="contact">聯繫我們</a>
+      <a id="openCartTop" class="top-cart">購物車（<b id="cartCountTop">0</b>）</a>
+    </div>
   </div>
 </nav>
-
-<div class="overlay" id="overlay"></div>
-<div class="drawer" id="drawer" aria-hidden="true">
-  <div class="drawer-head"><div><div class="drawer-title">選項</div><div class="drawer-sub">STReptile / Menu</div></div><button class="close" id="closeDrawer" aria-label="關閉選單">✕</button></div>
-  <a class="go-home" data-anchor="" tabindex="0">首頁</a>
-  <a class="go-collection" data-cat="全部分類" tabindex="0">全部館藏</a>
-  <a class="go-home" data-anchor="story" tabindex="0">品牌故事</a>
-  <a class="go-home" data-anchor="contact" tabindex="0">聯繫我們</a>
-  <a tabindex="0">我的收藏</a>
-  <a tabindex="0" id="openCartFromMenu">購物袋 <span style="font-family:Noto Sans TC,sans-serif;font-size:11px;color:var(--earth)">（<b id="cartCountMenu">0</b>）</span></a>
-  <div class="drawer-note">每一隻個體都值得被好好認識。<br>如果你看到喜歡的館藏，歡迎直接透過官方 LINE 詢問。</div>
-</div>
 
 <div class="cart-panel" id="cartPanel" aria-hidden="true">
   <div class="cart-head"><div><div class="cart-title">購物車</div><div class="drawer-sub">STReptile / CART</div></div><button class="cart-close" id="closeCart" aria-label="關閉購物車">✕</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-foot"><div class="cart-total"><span>合計</span><span id="cartTotal">$0</span></div><button class="cart-checkout" id="checkoutBtn">前往預訂／確認購物車</button></div>
+</div>
+
+<div class="detail-modal" id="detailModal" aria-hidden="true">
+  <div class="detail-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <button class="detail-close" id="detailClose" aria-label="關閉個體詳細資訊">✕</button>
+    <div class="detail-kicker">STREPTILE / INDIVIDUAL</div>
+    <h2 class="detail-title" id="detailTitle"></h2>
+    <div class="detail-code" id="detailCode"></div>
+    <div class="detail-info">
+      <div><span class="detail-label">系列</span><span class="detail-value" id="detailCat"></span></div>
+      <div><span class="detail-label">價格</span><span class="detail-value" id="detailPrice"></span></div>
+      <div><span class="detail-label">資料更新</span><span class="detail-value" id="detailUpdated"></span></div>
+      <div><span class="detail-label">個體狀態</span><span class="detail-value">可詢問／預訂</span></div>
+    </div>
+    <button class="detail-add" id="detailAdd">＋ 加入購物車</button>
+  </div>
 </div>
 
 <main id="homeView">
@@ -611,7 +647,7 @@ document.getElementById('chips').innerHTML = CATS.map((c,i)=>
 ).join('');
 
 document.getElementById('grid').innerHTML = PIECES.map(p=>
-  `<div class="piece" data-cat="${p.cat}">
+  `<div class="piece" data-cat="${p.cat}" data-code="${p.code}" tabindex="0" role="button" aria-label="查看 ${p.name} ${p.code} 詳細資訊">
     <div class="ph"></div>
     <div class="cap">
       <div class="code">${p.code}</div>
@@ -669,18 +705,68 @@ document.getElementById('chips').addEventListener('click', e=>{
   filterGrid(btn.dataset.cat);
 });
 
-const menuBtn = document.getElementById('menuBtn');
-const closeDrawerBtn = document.getElementById('closeDrawer');
-const drawer = document.getElementById('drawer');
-const overlay = document.getElementById('overlay');
-function openDrawer(){drawer.classList.add('open');overlay.classList.add('open');drawer.setAttribute('aria-hidden','false');menuBtn.setAttribute('aria-expanded','true')}
-function shutDrawer(){drawer.classList.remove('open');overlay.classList.remove('open');drawer.setAttribute('aria-hidden','true');menuBtn.setAttribute('aria-expanded','false')}
-menuBtn.addEventListener('click',()=>drawer.classList.contains('open')?shutDrawer():openDrawer());
-closeDrawerBtn.addEventListener('click',shutDrawer);
-overlay.addEventListener('click',shutDrawer);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){shutDrawer();closeCart()}});
+function shutDrawer(){}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeDetail()}});
 
-\n// 購物車：先以瀏覽器 localStorage 保存，之後可再接 Supabase 訂單。\nconst CART_KEY='st_reptile_cart_v1';\nlet cart=[];\ntry{cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]')}catch(e){cart=[]}\nfunction saveCart(){localStorage.setItem(CART_KEY,JSON.stringify(cart));renderCart()}\nfunction moneyNumber(v){return Number(String(v).replace(/[^0-9]/g,''))||0}\nfunction renderCart(){\n  const count=cart.length;\n  document.getElementById('cartCount').textContent=count;\n  document.getElementById('cartCountMenu').textContent=count;\n  const box=document.getElementById('cartItems');\n  if(!count){box.innerHTML='<div class="cart-empty">購物車目前還是空的。<br>看到喜歡的個體，就按「＋ 加入購物車」吧。</div>'}\n  else{box.innerHTML=cart.map((p,i)=>`<div class="cart-item"><div><div class="cart-item-name">${p.name}</div><div class="cart-item-meta">${p.code} · ${p.cat}</div><button class="cart-remove" data-remove="${i}">移除</button></div><div class="cart-item-price">${p.price}</div></div>`).join('')}\n  document.getElementById('cartTotal').textContent='$'+cart.reduce((sum,p)=>sum+moneyNumber(p.price),0).toLocaleString('zh-TW');\n}\nfunction addToCart(code){\n  const p=PIECES.find(x=>x.code===code); if(!p)return;\n  if(cart.some(x=>x.code===code)){openCart();return}\n  cart.push({...p}); saveCart(); openCart();\n}\nfunction openCart(){shutDrawer();document.getElementById('cartPanel').classList.add('open');document.getElementById('cartPanel').setAttribute('aria-hidden','false');document.getElementById('overlay').classList.add('open')}\nfunction closeCart(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('cartPanel').setAttribute('aria-hidden','true');document.getElementById('overlay').classList.remove('open')}\ndocument.getElementById('grid').addEventListener('click',e=>{const b=e.target.closest('.add-cart');if(b){e.stopPropagation();addToCart(b.dataset.code)}});\ndocument.getElementById('cartItems').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;cart.splice(Number(b.dataset.remove),1);saveCart()});\ndocument.getElementById('cartBtn').addEventListener('click',openCart);\ndocument.getElementById('openCartFromMenu').addEventListener('click',openCart);\ndocument.getElementById('closeCart').addEventListener('click',closeCart);\ndocument.getElementById('checkoutBtn').addEventListener('click',()=>{if(!cart.length){alert('購物車目前沒有商品');return} alert('購物車已整理完成，下一步可以接「預訂／詢問」流程。')});\nrenderCart();\n\n// 真正的即時觀看人數：Supabase Realtime Presence
+
+// 個體詳細資訊：點擊整張個體卡即可進入，不會和加入購物車按鈕衝突。
+let detailCode='';
+function openDetail(code){
+  const p=PIECES.find(x=>x.code===code); if(!p)return;
+  detailCode=code;
+  document.getElementById('detailTitle').textContent=p.name;
+  document.getElementById('detailCode').textContent=p.code;
+  document.getElementById('detailCat').textContent=p.cat;
+  document.getElementById('detailPrice').textContent=p.price;
+  document.getElementById('detailUpdated').textContent=p.updated;
+  document.getElementById('detailModal').classList.add('open');
+  document.getElementById('detailModal').setAttribute('aria-hidden','false');
+}
+function closeDetail(){document.getElementById('detailModal').classList.remove('open');document.getElementById('detailModal').setAttribute('aria-hidden','true');}
+document.getElementById('grid').addEventListener('click',e=>{
+  if(e.target.closest('.add-cart'))return;
+  const card=e.target.closest('.piece'); if(card)openDetail(card.dataset.code);
+});
+document.getElementById('grid').addEventListener('keydown',e=>{
+  if(e.key!=='Enter' && e.key!==' ')return;
+  if(e.target.closest('.add-cart'))return;
+  const card=e.target.closest('.piece'); if(card){e.preventDefault();openDetail(card.dataset.code);}
+});
+document.getElementById('detailClose').addEventListener('click',closeDetail);
+document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});
+document.getElementById('detailAdd').addEventListener('click',()=>{if(detailCode)addToCart(detailCode)});
+
+// 購物車：先以瀏覽器 localStorage 保存，之後可再接 Supabase 訂單。
+const CART_KEY='st_reptile_cart_v1';
+let cart=[];
+try{cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]')}catch(e){cart=[]}
+function saveCart(){localStorage.setItem(CART_KEY,JSON.stringify(cart));renderCart()}
+function moneyNumber(v){return Number(String(v).replace(/[^0-9]/g,''))||0}
+function renderCart(){
+  const count=cart.length;
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartCountTop').textContent=count;
+  const box=document.getElementById('cartItems');
+  if(!count){box.innerHTML='<div class="cart-empty">購物車目前還是空的。<br>看到喜歡的個體，就按「＋ 加入購物車」吧。</div>'}
+  else{box.innerHTML=cart.map((p,i)=>`<div class="cart-item"><div><div class="cart-item-name">${p.name}</div><div class="cart-item-meta">${p.code} · ${p.cat}</div><button class="cart-remove" data-remove="${i}">移除</button></div><div class="cart-item-price">${p.price}</div></div>`).join('')}
+  document.getElementById('cartTotal').textContent='$'+cart.reduce((sum,p)=>sum+moneyNumber(p.price),0).toLocaleString('zh-TW');
+}
+function addToCart(code){
+  const p=PIECES.find(x=>x.code===code); if(!p)return;
+  if(cart.some(x=>x.code===code)){openCart();return}
+  cart.push({...p}); saveCart(); openCart();
+}
+function openCart(){document.getElementById('cartPanel').classList.add('open');document.getElementById('cartPanel').setAttribute('aria-hidden','false')}
+function closeCart(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('cartPanel').setAttribute('aria-hidden','true')}
+document.getElementById('grid').addEventListener('click',e=>{const b=e.target.closest('.add-cart');if(b){e.stopPropagation();addToCart(b.dataset.code)}});
+document.getElementById('cartItems').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;cart.splice(Number(b.dataset.remove),1);saveCart()});
+document.getElementById('cartBtn').addEventListener('click',openCart);
+document.getElementById('openCartTop').addEventListener('click',openCart);
+document.getElementById('closeCart').addEventListener('click',closeCart);
+document.getElementById('checkoutBtn').addEventListener('click',()=>{if(!cart.length){alert('購物車目前沒有商品');return} alert('購物車已整理完成，下一步可以接「預訂／詢問」流程。')});
+renderCart();
+
+// 真正的即時觀看人數：Supabase Realtime Presence
 const LIVE_SUPABASE_URL='https://ddhtaubxqklwydgokhju.supabase.co';
 const LIVE_SUPABASE_KEY='sb_publishable_PGL7DIYRNiycFaWlv2zk9A_ZU4Dcz_X';
 let liveChannel=null;
