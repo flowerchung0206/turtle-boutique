@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <title>頑龜爬蟲 STReptile</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta property="og:title" content="頑龜爬蟲 STReptile">
 <meta property="og:description" content="鑽紋龜與各式爬寵館藏展示">
 <meta property="og:image" content="logo.png">
@@ -100,14 +101,9 @@ nav{
   letter-spacing:.18em;
   margin-top:3px;
 }
-.navicons{
-  display:flex;
-  gap:18px;
-  font-size:12px;
-  font-weight:500;
-  color:var(--ink-soft);
-}
-.navicons span{display:flex;align-items:center;gap:5px}
+ .navicons{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:500;color:var(--ink-soft)}
+.live-mini{display:flex;align-items:center;gap:7px;white-space:nowrap;color:var(--earth);font-size:11px}.live-mini .dot{width:7px;height:7px;border-radius:50%;background:#718b67;box-shadow:0 0 0 4px rgba(113,139,103,.12);animation:live-pulse 1.8s ease-in-out infinite}.live-mini b{font-variant-numeric:tabular-nums;color:var(--forest);font-weight:700}.option-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(250,247,240,.78);color:var(--forest);padding:8px 13px;border-radius:999px;font:600 12px/1 'Noto Sans TC',sans-serif;cursor:pointer;transition:background .25s ease,border-color .25s ease,transform .25s ease}.option-btn:hover{background:var(--cream);border-color:var(--gold);transform:translateY(-1px)}.option-btn .chev{font-size:13px;line-height:1;transition:transform .3s ease}.option-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+@keyframes live-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.82)}}
 
 .hero-cover{
   position:relative;
@@ -153,6 +149,7 @@ nav{
   max-width:48ch;
   margin:0 0 30px;
 }
+.live-badge{display:inline-flex;align-items:center;gap:9px;margin:0 0 18px;padding:8px 12px;border:1px solid rgba(238,238,226,.28);background:rgba(28,44,34,.46);backdrop-filter:blur(8px);border-radius:999px;color:#f1eadb;font-size:11px;letter-spacing:.03em}.live-badge .dot{width:7px;height:7px;border-radius:50%;background:#91a987;box-shadow:0 0 0 4px rgba(145,169,135,.12);animation:live-pulse 1.8s ease-in-out infinite}.live-badge b{font-variant-numeric:tabular-nums;color:#fff;font-weight:700}
 .btn-gold{
   display:inline-flex;
   align-items:center;
@@ -464,71 +461,13 @@ footer{
 @keyframes splash-out{to{opacity:0;visibility:hidden;pointer-events:none}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-.hamburger{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:4px;
-}
-.hamburger span{width:22px;height:1px;background:var(--forest)}
-.hamburger:focus-visible{outline:2px solid var(--forest);outline-offset:3px}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(20,29,23,.45);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .35s ease;
-  z-index:30;
-}
-.overlay.open{opacity:1;pointer-events:auto}
-
-.drawer{
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  width:min(340px,86vw);
-  background:var(--panel);
-  z-index:31;
-  transform:translateX(100%);
-  transition:transform .4s cubic-bezier(.4,0,.2,1);
-  padding:26px 32px 50px;
-  display:flex;
-  flex-direction:column;
-  overflow-y:auto;
-  border-left:1px solid var(--line);
-  box-shadow:-18px 0 45px rgba(28,36,30,.12);
-}
-.drawer.open{transform:translateX(0)}
-.drawer .close{
-  align-self:flex-end;
-  background:none;
-  border:none;
-  font-size:18px;
-  color:var(--earth);
-  cursor:pointer;
-  margin-bottom:30px;
-}
-.drawer a{
-  color:var(--forest);
-  text-decoration:none;
-  font-weight:600;
-  font-family:Georgia,'Times New Roman','Noto Serif TC',serif;
-  font-size:20px;
-  padding:14px 0;
-  border-bottom:1px solid var(--line);
-  cursor:pointer;
-}
-.drawer a:hover,.drawer a:focus-visible{color:var(--earth)}
-
+.hamburger{display:none}
+.overlay{position:fixed;inset:0;background:rgba(20,29,23,.30);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s;z-index:30;backdrop-filter:blur(2px)}.overlay.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .38s ease}.drawer{position:fixed;top:0;right:0;bottom:0;width:min(360px,88vw);background:rgba(248,245,238,.97);z-index:31;transform:translate3d(22px,0,0);opacity:0;visibility:hidden;pointer-events:none;transition:transform .42s cubic-bezier(.22,1,.36,1),opacity .28s ease,visibility 0s linear .42s;padding:28px 32px 50px;display:flex;flex-direction:column;overflow-y:auto;border-left:1px solid var(--line);box-shadow:-24px 0 55px rgba(28,36,30,.13)}.drawer.open{transform:translate3d(0,0,0);opacity:1;visibility:visible;pointer-events:auto;transition:transform .42s cubic-bezier(.22,1,.36,1),opacity .32s ease}.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}.drawer-title{font-family:Georgia,'Times New Roman','Noto Serif TC',serif;color:var(--forest);font-size:23px;font-weight:600;letter-spacing:.05em}.drawer-sub{font-size:10px;letter-spacing:.18em;color:var(--earth);margin-top:4px;text-transform:uppercase}.drawer .close{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:transparent;border:1px solid var(--line);font-size:16px;color:var(--earth);cursor:pointer;transition:background .2s,border-color .2s,transform .2s}.drawer .close:hover{background:var(--cream);border-color:var(--gold);transform:rotate(5deg)}.drawer a{color:var(--forest);text-decoration:none;font-weight:600;font-family:Georgia,'Times New Roman','Noto Serif TC',serif;font-size:20px;padding:16px 0;border-bottom:1px solid var(--line);cursor:pointer;opacity:0;transform:translateX(10px);transition:color .2s ease,opacity .35s ease,transform .35s ease}.drawer.open a{opacity:1;transform:none}.drawer.open a:nth-of-type(1){transition-delay:.05s}.drawer.open a:nth-of-type(2){transition-delay:.09s}.drawer.open a:nth-of-type(3){transition-delay:.13s}.drawer.open a:nth-of-type(4){transition-delay:.17s}.drawer.open a:nth-of-type(5){transition-delay:.21s}.drawer.open a:nth-of-type(6){transition-delay:.25s}.drawer a:hover,.drawer a:focus-visible{color:var(--earth)}.drawer-note{margin-top:auto;padding-top:30px;color:var(--ink-soft);font-size:11.5px;line-height:1.8}
 @media (max-width:640px){
   .navrow{padding:12px 17px}
-  .navicons{gap:10px;font-size:11px}
+  .navicons{gap:8px}
+  .live-mini{display:none}
+  .option-btn{padding:8px 11px}
   .hero{padding:min(62vw,280px) 19px 55px}
   .hero h1{font-size:clamp(33px,11vw,52px)}
   .hero .sub{font-size:13px;line-height:1.9}
@@ -538,6 +477,25 @@ footer{
   .story{padding:72px 20px}
   footer{padding:50px 20px 36px}
 }
+
+/* shopping cart */
+.piece .add-cart{position:absolute;left:14px;right:14px;bottom:14px;z-index:3;border:1px solid rgba(255,255,255,.42);background:rgba(250,247,240,.94);color:var(--forest);border-radius:999px;padding:9px 13px;font:600 12px/1.2 'Noto Sans TC',sans-serif;cursor:pointer;backdrop-filter:blur(8px);opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,background .2s ease,border-color .2s ease}
+.piece:hover .add-cart,.piece:focus-within .add-cart{opacity:1;transform:none}
+.piece .add-cart:hover{background:var(--cream);border-color:var(--gold)}
+.cart-mini{display:inline-flex;align-items:center;gap:6px;color:var(--forest);font-size:11px;white-space:nowrap}
+.cart-mini b{font-variant-numeric:tabular-nums}
+.cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(390px,92vw);background:rgba(248,245,238,.98);z-index:36;transform:translateX(22px);opacity:0;visibility:hidden;pointer-events:none;transition:transform .38s cubic-bezier(.22,1,.36,1),opacity .28s ease,visibility 0s linear .38s;padding:28px 28px 34px;display:flex;flex-direction:column;box-shadow:-24px 0 55px rgba(28,36,30,.15);border-left:1px solid var(--line)}
+.cart-panel.open{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:transform .38s cubic-bezier(.22,1,.36,1),opacity .3s ease}
+.cart-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.cart-title{font:600 23px Georgia,'Times New Roman','Noto Serif TC',serif;color:var(--forest)}
+.cart-close{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--earth);cursor:pointer}
+.cart-items{overflow:auto;flex:1;padding:14px 0}
+.cart-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:15px 0;border-bottom:1px solid var(--line)}
+.cart-item-name{font-weight:700;color:var(--forest);font-size:14px}.cart-item-meta{font-size:11px;color:var(--ink-soft);margin-top:4px}.cart-item-price{font-weight:700;color:var(--earth);font-size:13px}
+.cart-remove{border:0;background:none;color:var(--earth);font-size:11px;cursor:pointer;padding:4px 0}
+.cart-empty{padding:55px 10px;text-align:center;color:var(--ink-soft);font-size:13px;line-height:1.8}
+.cart-foot{border-top:1px solid var(--line);padding-top:18px}.cart-total{display:flex;justify-content:space-between;color:var(--forest);font-weight:700;margin-bottom:14px}.cart-checkout{width:100%;border:0;border-radius:999px;padding:13px 18px;background:var(--forest);color:#fff;font:700 13px 'Noto Sans TC',sans-serif;cursor:pointer}
+@media (max-width:760px){.piece .add-cart{opacity:1;transform:none;position:absolute;bottom:12px;padding:8px 10px}.piece .cap{padding-bottom:58px}}
 </style>
 </head>
 <body>
@@ -549,32 +507,37 @@ footer{
 
 <nav>
   <div class="navrow">
-    <button class="hamburger" id="menuBtn" aria-label="開啟選單"><span></span><span></span><span></span></button>
     <button class="brandwrap" id="brandMark" aria-label="回首頁">
       <img src="logo.png" alt="頑龜爬蟲 STReptile">
-      <span class="brandname">
-        <span class="zh">頑龜爬蟲</span>
-        <span class="en">STReptile</span>
-      </span>
+      <span class="brandname"><span class="zh">頑龜爬蟲</span><span class="en">STReptile</span></span>
     </button>
-    <div class="navicons"><span>♡ 收藏</span><span>購物車 0</span></div>
+    <div class="navicons"><span class="live-mini"><i class="dot"></i>現在 <b id="liveViewerNav">1</b> 人在線</span><button class="cart-mini" id="cartBtn" aria-label="開啟購物車">購物車 <b id="cartCount">0</b></button><button class="option-btn" id="menuBtn" aria-label="開啟選項" aria-expanded="false">選項 <span class="chev">⌄</span></button></div>
   </div>
 </nav>
 
 <div class="overlay" id="overlay"></div>
-<div class="drawer" id="drawer">
-  <button class="close" id="closeDrawer" aria-label="關閉選單">✕</button>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head"><div><div class="drawer-title">選項</div><div class="drawer-sub">STReptile / Menu</div></div><button class="close" id="closeDrawer" aria-label="關閉選單">✕</button></div>
+  <a class="go-home" data-anchor="" tabindex="0">首頁</a>
   <a class="go-collection" data-cat="全部分類" tabindex="0">全部館藏</a>
   <a class="go-home" data-anchor="story" tabindex="0">品牌故事</a>
   <a class="go-home" data-anchor="contact" tabindex="0">聯繫我們</a>
   <a tabindex="0">我的收藏</a>
-  <a tabindex="0">購物袋</a>
+  <a tabindex="0" id="openCartFromMenu">購物袋 <span style="font-family:Noto Sans TC,sans-serif;font-size:11px;color:var(--earth)">（<b id="cartCountMenu">0</b>）</span></a>
+  <div class="drawer-note">每一隻個體都值得被好好認識。<br>如果你看到喜歡的館藏，歡迎直接透過官方 LINE 詢問。</div>
+</div>
+
+<div class="cart-panel" id="cartPanel" aria-hidden="true">
+  <div class="cart-head"><div><div class="cart-title">購物車</div><div class="drawer-sub">STReptile / CART</div></div><button class="cart-close" id="closeCart" aria-label="關閉購物車">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot"><div class="cart-total"><span>合計</span><span id="cartTotal">$0</span></div><button class="cart-checkout" id="checkoutBtn">前往預訂／確認購物車</button></div>
 </div>
 
 <main id="homeView">
   <div class="hero-cover">
     <section class="hero">
       <p class="kicker">2026 新品系列</p>
+      <div class="live-badge"><i class="dot"></i>現在有 <b id="liveViewerCount">1</b> 人正在瀏覽館藏</div>
       <h1>用心挑一隻，<br>養出一份<span class="pop">默契</span>。</h1>
       <p class="sub">頑龜爬蟲 STReptile，專營鑽紋龜與各式爬寵。每一隻的來源、花紋與狀態都清楚記錄，陪你找到真正對眼的那一隻。</p>
       <button class="btn-gold go-collection" data-cat="全部分類">逛逛館藏 →</button>
@@ -656,6 +619,7 @@ document.getElementById('grid').innerHTML = PIECES.map(p=>
       <div class="price">${p.price}</div>
       <div class="updated">更新於 ${p.updated}</div>
     </div>
+    <button class="add-cart" data-code="${p.code}" aria-label="將 ${p.name} 加入購物車">＋ 加入購物車</button>
   </div>`
 ).join('');
 
@@ -709,11 +673,20 @@ const menuBtn = document.getElementById('menuBtn');
 const closeDrawerBtn = document.getElementById('closeDrawer');
 const drawer = document.getElementById('drawer');
 const overlay = document.getElementById('overlay');
-function openDrawer(){ drawer.classList.add('open'); overlay.classList.add('open'); }
-function shutDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('open'); }
-menuBtn.addEventListener('click', openDrawer);
-closeDrawerBtn.addEventListener('click', shutDrawer);
-overlay.addEventListener('click', shutDrawer);
+function openDrawer(){drawer.classList.add('open');overlay.classList.add('open');drawer.setAttribute('aria-hidden','false');menuBtn.setAttribute('aria-expanded','true')}
+function shutDrawer(){drawer.classList.remove('open');overlay.classList.remove('open');drawer.setAttribute('aria-hidden','true');menuBtn.setAttribute('aria-expanded','false')}
+menuBtn.addEventListener('click',()=>drawer.classList.contains('open')?shutDrawer():openDrawer());
+closeDrawerBtn.addEventListener('click',shutDrawer);
+overlay.addEventListener('click',shutDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){shutDrawer();closeCart()}});
+
+\n// 購物車：先以瀏覽器 localStorage 保存，之後可再接 Supabase 訂單。\nconst CART_KEY='st_reptile_cart_v1';\nlet cart=[];\ntry{cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]')}catch(e){cart=[]}\nfunction saveCart(){localStorage.setItem(CART_KEY,JSON.stringify(cart));renderCart()}\nfunction moneyNumber(v){return Number(String(v).replace(/[^0-9]/g,''))||0}\nfunction renderCart(){\n  const count=cart.length;\n  document.getElementById('cartCount').textContent=count;\n  document.getElementById('cartCountMenu').textContent=count;\n  const box=document.getElementById('cartItems');\n  if(!count){box.innerHTML='<div class="cart-empty">購物車目前還是空的。<br>看到喜歡的個體，就按「＋ 加入購物車」吧。</div>'}\n  else{box.innerHTML=cart.map((p,i)=>`<div class="cart-item"><div><div class="cart-item-name">${p.name}</div><div class="cart-item-meta">${p.code} · ${p.cat}</div><button class="cart-remove" data-remove="${i}">移除</button></div><div class="cart-item-price">${p.price}</div></div>`).join('')}\n  document.getElementById('cartTotal').textContent='$'+cart.reduce((sum,p)=>sum+moneyNumber(p.price),0).toLocaleString('zh-TW');\n}\nfunction addToCart(code){\n  const p=PIECES.find(x=>x.code===code); if(!p)return;\n  if(cart.some(x=>x.code===code)){openCart();return}\n  cart.push({...p}); saveCart(); openCart();\n}\nfunction openCart(){shutDrawer();document.getElementById('cartPanel').classList.add('open');document.getElementById('cartPanel').setAttribute('aria-hidden','false');document.getElementById('overlay').classList.add('open')}\nfunction closeCart(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('cartPanel').setAttribute('aria-hidden','true');document.getElementById('overlay').classList.remove('open')}\ndocument.getElementById('grid').addEventListener('click',e=>{const b=e.target.closest('.add-cart');if(b){e.stopPropagation();addToCart(b.dataset.code)}});\ndocument.getElementById('cartItems').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;cart.splice(Number(b.dataset.remove),1);saveCart()});\ndocument.getElementById('cartBtn').addEventListener('click',openCart);\ndocument.getElementById('openCartFromMenu').addEventListener('click',openCart);\ndocument.getElementById('closeCart').addEventListener('click',closeCart);\ndocument.getElementById('checkoutBtn').addEventListener('click',()=>{if(!cart.length){alert('購物車目前沒有商品');return} alert('購物車已整理完成，下一步可以接「預訂／詢問」流程。')});\nrenderCart();\n\n// 真正的即時觀看人數：Supabase Realtime Presence
+const LIVE_SUPABASE_URL='https://ddhtaubxqklwydgokhju.supabase.co';
+const LIVE_SUPABASE_KEY='sb_publishable_PGL7DIYRNiycFaWlv2zk9A_ZU4Dcz_X';
+let liveChannel=null;
+function updateLiveCount(){if(!liveChannel)return;const state=liveChannel.presenceState();const ids=new Set();Object.values(state||{}).forEach(list=>(list||[]).forEach(p=>{if(p?.visitor_id)ids.add(p.visitor_id)}));const count=Math.max(1,ids.size);document.getElementById('liveViewerCount').textContent=count;document.getElementById('liveViewerNav').textContent=count}
+async function startLivePresence(){try{if(!window.supabase?.createClient)return;const client=window.supabase.createClient(LIVE_SUPABASE_URL,LIVE_SUPABASE_KEY);const visitorId=sessionStorage.getItem('st_reptile_visitor_id')||crypto.randomUUID();sessionStorage.setItem('st_reptile_visitor_id',visitorId);liveChannel=client.channel('st-reptile-live',{config:{presence:{key:visitorId}}});liveChannel.on('presence',{event:'sync'},updateLiveCount).on('presence',{event:'join'},updateLiveCount).on('presence',{event:'leave'},updateLiveCount);liveChannel.subscribe(async status=>{if(status==='SUBSCRIBED'){await liveChannel.track({visitor_id:visitorId,online_at:new Date().toISOString()});updateLiveCount()}})}catch(err){console.warn('即時觀看人數暫時無法連線',err)}}
+startLivePresence();
 </script>
 </body>
 </html>
