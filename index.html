@@ -425,6 +425,17 @@ footer{
   max-width:38ch;
   line-height:1.9;
 }
+.foot-photo{
+  flex:1 1 240px;
+  max-width:320px;
+  height:120px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(245,240,229,.18);
+  background:rgba(245,240,229,.06);
+}
+.foot-photo img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:860px){.foot-photo{display:none!important}}
 .line-btn{
   display:inline-flex;
   align-items:center;
@@ -616,6 +627,7 @@ footer{
       <div><span class="detail-label">價格</span><span class="detail-value" id="detailPrice"></span></div>
       <div><span class="detail-label">資料更新</span><span class="detail-value" id="detailUpdated"></span></div>
       <div><span class="detail-label">個體狀態</span><span class="detail-value">可詢問／預訂</span></div>
+      <div><span class="detail-label">瀏覽次數</span><span class="detail-value" id="detailViews"></span></div>
     </div>
     <button class="detail-add" id="detailAdd">＋ 加入購物車</button>
   </div>
@@ -679,6 +691,7 @@ footer{
         <p class="foot-sub">專營鑽紋龜與各式爬蟲寵物，提供完整來源與飼養紀錄。如對館藏有興趣，歡迎透過官方 LINE 與我們洽詢。</p>
       </div>
     </div>
+    <div class="foot-photo" id="footPhoto" hidden><img id="footPhotoImg" src="" alt=""></div>
     <a class="line-btn" href="https://lin.ee/qKJGC3WS" target="_blank" rel="noopener">加 LINE 聊聊</a>
   </div>
   <p class="fine">© 2026 頑龜爬蟲 STReptile。頁面展示內容為實際個體，實際狀態以現場為準。</p>
@@ -741,7 +754,7 @@ function renderGrid(){
     const inCart=cart.some(x=>x.code===p.code);
     const locked=lockedByOther(p) && !inCart;
     const btnLabel=inCart?'已在購物車':locked?'其他客人保留中':'＋ 加入購物車';
-    return `<div class="piece${locked?' is-locked':''}" data-cat="${esc(p.cat)}" data-code="${esc(p.code)}" tabindex="0" role="button" aria-label="查看 ${esc(p.name)} ${esc(p.code)} 詳細資訊"><div class="ph">${img}</div><div class="cap"><div class="code">${esc(p.code)}</div><div class="name">${esc(p.name)}</div><div class="price">${formatPrice(p.price)}</div><div class="updated">更新於 ${formatDate(p.updated)}</div></div><button class="add-cart${locked?' locked':''}" data-code="${esc(p.code)}" ${locked?'disabled':''} aria-label="將 ${esc(p.name)} 加入購物車">${btnLabel}</button></div>`;
+    return `<div class="piece${locked?' is-locked':''}" data-cat="${esc(p.cat)}" data-code="${esc(p.code)}" tabindex="0" role="button" aria-label="查看 ${esc(p.name)} ${esc(p.code)} 詳細資訊"><div class="ph">${img}</div><div class="cap"><div class="code">${esc(p.code)}</div><div class="name">${esc(p.name)}</div><div class="price">${formatPrice(p.price)}</div><div class="updated">更新於 ${formatDate(p.updated)} · ${(p.view_count||0).toLocaleString('zh-TW')} 人看過</div></div><button class="add-cart${locked?' locked':''}" data-code="${esc(p.code)}" ${locked?'disabled':''} aria-label="將 ${esc(p.name)} 加入購物車">${btnLabel}</button></div>`;
   }).join('');
 }
 function filterGrid(cat){let shown=0;document.querySelectorAll('.piece').forEach(p=>{const match=cat==='全部分類'||p.dataset.cat===cat;p.dataset.hidden=match?'false':'true';if(match)shown++;});document.getElementById('count').textContent=shown+' 件個體';document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===cat));}
@@ -754,13 +767,15 @@ document.getElementById('brandMark').addEventListener('click',()=>showHome());
 document.getElementById('chips').addEventListener('click',e=>{const btn=e.target.closest('.chip');if(btn)filterGrid(btn.dataset.cat)});
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeDetail()}});
-async function recordView(id){try{const visitorId=sessionStorage.getItem('st_reptile_visitor_id')||crypto.randomUUID();sessionStorage.setItem('st_reptile_visitor_id',visitorId);await sb.from('st_turtle_view_events').insert({turtle_id:String(id),visitor_id:visitorId});}catch(e){console.warn('view record failed',e)}}
-async function openDetail(code){const p=PIECES.find(x=>x.code===code);if(!p)return;detailCode=code;document.getElementById('detailTitle').textContent=p.name;document.getElementById('detailCode').textContent=p.code;document.getElementById('detailCat').textContent=p.cat||'—';document.getElementById('detailPrice').textContent=formatPrice(p.price);document.getElementById('detailUpdated').textContent=formatDate(p.updated);const media=document.getElementById('detailMedia');const all=[...(p.main_photo_url?[p.main_photo_url]:[]),...(Array.isArray(p.gallery_urls)?p.gallery_urls:[])];media.innerHTML=all.length?all.map(u=>`<img src="${esc(u)}" alt="${esc(p.name)}" loading="lazy">`).join(''):'<div class="detail-no-media">照片由後台新增後會顯示於此</div>';const inCart=cart.some(x=>x.code===p.code);const locked=lockedByOther(p)&&!inCart;const addBtn=document.getElementById('detailAdd');addBtn.textContent=inCart?'已在購物車':locked?'其他客人保留中':'＋ 加入購物車';addBtn.classList.toggle('locked',locked);addBtn.disabled=locked;document.getElementById('detailModal').classList.add('open');document.getElementById('detailModal').setAttribute('aria-hidden','false');recordView(p.id)}
+const VIEWED_THIS_SESSION=(()=>{try{return new Set(JSON.parse(sessionStorage.getItem('st_reptile_viewed')||'[]'));}catch(e){return new Set();}})();
+function refreshViewCountUI(p){const vEl=document.getElementById('detailViews');if(vEl&&detailCode===p.code)vEl.textContent=(p.view_count||0).toLocaleString('zh-TW')+' 次';const card=document.querySelector(`.piece[data-code="${CSS.escape(p.code)}"] .updated`);if(card)card.textContent='更新於 '+formatDate(p.updated)+' · '+(p.view_count||0).toLocaleString('zh-TW')+' 人看過';}
+async function recordView(p){const id=p.id;if(VIEWED_THIS_SESSION.has(String(id)))return;try{const visitorId=sessionStorage.getItem('st_reptile_visitor_id')||crypto.randomUUID();sessionStorage.setItem('st_reptile_visitor_id',visitorId);const {error}=await sb.from('st_turtle_view_events').insert({turtle_id:String(id),visitor_id:visitorId});if(error)throw error;VIEWED_THIS_SESSION.add(String(id));try{sessionStorage.setItem('st_reptile_viewed',JSON.stringify([...VIEWED_THIS_SESSION]));}catch(e){}p.view_count=(p.view_count||0)+1;refreshViewCountUI(p);}catch(e){console.warn('view record failed',e)}}
+async function openDetail(code){const p=PIECES.find(x=>x.code===code);if(!p)return;detailCode=code;document.getElementById('detailTitle').textContent=p.name;document.getElementById('detailCode').textContent=p.code;document.getElementById('detailCat').textContent=p.cat||'—';document.getElementById('detailPrice').textContent=formatPrice(p.price);document.getElementById('detailUpdated').textContent=formatDate(p.updated);document.getElementById('detailViews').textContent=(p.view_count||0).toLocaleString('zh-TW')+' 次';const media=document.getElementById('detailMedia');const all=[...(p.main_photo_url?[p.main_photo_url]:[]),...(Array.isArray(p.gallery_urls)?p.gallery_urls:[])];media.innerHTML=all.length?all.map(u=>`<img src="${esc(u)}" alt="${esc(p.name)}" loading="lazy">`).join(''):'<div class="detail-no-media">照片由後台新增後會顯示於此</div>';const inCart=cart.some(x=>x.code===p.code);const locked=lockedByOther(p)&&!inCart;const addBtn=document.getElementById('detailAdd');addBtn.textContent=inCart?'已在購物車':locked?'其他客人保留中':'＋ 加入購物車';addBtn.classList.toggle('locked',locked);addBtn.disabled=locked;document.getElementById('detailModal').classList.add('open');document.getElementById('detailModal').setAttribute('aria-hidden','false');recordView(p)}
 function closeDetail(){document.getElementById('detailModal').classList.remove('open');document.getElementById('detailModal').setAttribute('aria-hidden','true')}
 document.getElementById('grid').addEventListener('click',e=>{if(e.target.closest('.add-cart'))return;const card=e.target.closest('.piece');if(card)openDetail(card.dataset.code)});
 document.getElementById('grid').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;if(e.target.closest('.add-cart'))return;const card=e.target.closest('.piece');if(card){e.preventDefault();openDetail(card.dataset.code)}});
 document.getElementById('detailClose').addEventListener('click',closeDetail);document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail()});document.getElementById('detailAdd').addEventListener('click',()=>{if(detailCode)addToCart(detailCode)});
-async function loadSite(){const {data}=await sb.from('st_site_settings').select('*').eq('key','homepage').maybeSingle();if(data){document.getElementById('homeEyebrow').textContent=data.eyebrow||'';document.getElementById('homeTitle').textContent=data.title||'';document.getElementById('homeSubtitle').textContent=data.subtitle||'';document.getElementById('homeCta').textContent=(data.cta||'探索館藏')+' →';if(data.cover_url){const cover=document.querySelector('.hero-cover');if(cover)cover.style.backgroundImage=`linear-gradient(rgba(28,36,30,.16),rgba(28,36,30,.16)),url("${data.cover_url}")`;}}}
+async function loadSite(){const {data}=await sb.from('st_site_settings').select('*').eq('key','homepage').maybeSingle();if(data){document.getElementById('homeEyebrow').textContent=data.eyebrow||'';document.getElementById('homeTitle').textContent=data.title||'';document.getElementById('homeSubtitle').textContent=data.subtitle||'';document.getElementById('homeCta').textContent=(data.cta||'探索館藏')+' →';if(data.cover_url){const cover=document.querySelector('.hero-cover');if(cover)cover.style.backgroundImage=`linear-gradient(rgba(28,36,30,.16),rgba(28,36,30,.16)),url("${data.cover_url}")`;const footImg=document.getElementById('footPhotoImg'),footWrap=document.getElementById('footPhoto');if(footImg&&footWrap){footImg.src=data.cover_url;footWrap.hidden=false;}}}}
 async function loadTurtles(){const {data,error}=await sb.from('st_public_turtles').select('*').in('status',['在架','預定中']).order('updated_at',{ascending:false});if(error){console.warn(error);return}const ids=(data||[]).map(x=>x.id);let media=[];if(ids.length){const r=await sb.from('st_turtle_media').select('turtle_id,media_type,public_url,sort_order').in('turtle_id',ids).order('sort_order');media=r.data||[]}PIECES=(data||[]).map(x=>{const m=media.filter(a=>a.turtle_id===x.id);return {...x,cat:x.category||'',updated:x.updated_at,price:x.price,main_photo_url:x.main_photo_url||m.find(a=>a.media_type==='main')?.public_url||null,gallery_urls:m.filter(a=>a.media_type==='gallery').map(a=>a.public_url)}});const fixedCats=['全部分類','新手入門款','卡羅萊納鑽紋','華麗鑽紋','德州鑽紋','金光閃閃','大麥町系列','青花瓷系列','老闆珍藏']; CATS=fixedCats; renderChips(); renderGrid()}
 function moneyNumber(v){return Number(String(v).replace(/[^0-9]/g,''))||0}
 let deliveryMethod='自取';
