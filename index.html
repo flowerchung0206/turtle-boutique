@@ -375,10 +375,11 @@ nav{
 }
 @media (max-width:1040px) and (min-width:861px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:860px){
-  .collection-layout{grid-template-columns:1fr}
-  .cat-sidebar{position:static}
+  .collection-layout{grid-template-columns:1fr;min-width:0}
+  .cat-sidebar{position:static;min-width:0}
+  .collection-main{min-width:0}
   .cat-sidebar-title{display:none}
-  .chips{flex-direction:row;overflow-x:auto;padding:2px 0 10px}
+  .chips{flex-direction:row;overflow-x:auto;padding:2px 0 10px;min-width:0}
   .chip{width:auto}
 }
 .piece{
